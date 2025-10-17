@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
+import { Bounce, toast } from "react-toastify";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -65,7 +66,17 @@ const Register = () => {
         }
       )
       .then((res) => {
-        console.log(res);
+        toast.success("Registeration Successful!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
       })
       .catch((error) => {
         console.log(error);

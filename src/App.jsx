@@ -7,6 +7,7 @@ import {
   RouterProvider,
 } from "react-router";
 import Register from "./components/Register";
+import { ToastContainer } from "react-toastify";
 
 const App = () => {
   const pageRouting = createBrowserRouter(
@@ -19,6 +20,7 @@ const App = () => {
 
   return (
     <>
+      <ToastContainer />
       <RouterProvider router={pageRouting}></RouterProvider>
     </>
   );
