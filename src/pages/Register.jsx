@@ -1,9 +1,17 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
+import { Link, useNavigate } from "react-router";
+import { SyncLoader } from "react-spinners";
 import { Bounce, toast } from "react-toastify";
 
 const Register = () => {
+  // Dealing with Loading API
+  const [isLoading, setIsLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  // Form Data Handling
   const [formData, setFormData] = useState({
     email: null,
     password: null,
@@ -12,6 +20,7 @@ const Register = () => {
     confirmPass: null,
   });
 
+  // Error Handling
   const [allErrors, setAllErrors] = useState({
     emailError: "border-gray-300",
     passwordError: "border-gray-300",
@@ -19,9 +28,9 @@ const Register = () => {
     confirmPassError: "border-gray-300",
   });
 
-  //   ------------------------------ Submit Handler
+  //   ------------------------------ Submit Handler: conditions
   const handleRegister = (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Preventing the Form to reload the page
 
     if (!formData.username) {
       setAllErrors((prev) => ({ ...prev, usernameError: "border-red-500" }));
@@ -49,6 +58,9 @@ const Register = () => {
         confirmPassError: "border-red-500",
       }));
 
+    setIsLoading(true);
+
+    // Fetching Registeration Authentication API from
     axios
       .post(
         "https://api.freeapi.app/api/v1/users/register",
@@ -66,7 +78,10 @@ const Register = () => {
         }
       )
       .then((res) => {
-        toast.success("Registeration Successful!", {
+        // Navigate to Login
+        // navigate("/login");
+        // Toastify NPM - Successful
+        toast.success("Registeration successful!", {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -77,9 +92,22 @@ const Register = () => {
           theme: "light",
           transition: Bounce,
         });
+        setIsLoading(false);
       })
       .catch((error) => {
-        console.log(error);
+        // Toastify NPM - Unsuccessful
+        toast.error("Registeration unsuccessful", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+        setIsLoading(false);
       });
   };
 
@@ -209,22 +237,31 @@ const Register = () => {
               </div>
             </div>
 
-            <button
-              type="submit"
-              className="w-full mt-1 bg-indigo-600 text-white py-2 rounded-md font-medium hover:bg-indigo-700 transition-colors"
-            >
-              Register
-            </button>
+            {isLoading ? (
+              <div
+                type="submit"
+                className="flex justify-center items-center w-full mt-1 bg-indigo-600 text-white py-2 rounded-md font-medium hover:bg-indigo-700 transition-colors"
+              >
+                <SyncLoader color={"#fff"} size={10} speedMultiplier={0.8} />
+              </div>
+            ) : (
+              <button
+                type="submit"
+                className="w-full mt-1 bg-indigo-600 text-white py-2 rounded-md font-medium hover:bg-indigo-700 transition-colors"
+              >
+                Register
+              </button>
+            )}
           </form>
 
           <div className="mt-4 flex items-center justify-center text-sm text-gray-600">
             <span>Already have an account?</span>
-            <button
-              type="button"
+            <Link
+              to={"/login"}
               className="ml-2 text-indigo-600 font-medium hover:underline"
             >
               Login
-            </button>
+            </Link>
           </div>
         </div>
       </div>
